@@ -144,6 +144,13 @@ class JobSet(object):
             df.to_csv(f, index=False, sep=",",
                       float_format='%.{}f'.format(self.float_precision))
 
+    @classmethod
+    def from_df(cls, df, resource_bounds=None):
+        df.job_id = df.job_id.astype(str)
+        df.profile = df.profile.astype(str)
+        df.allocated_resources = df.allocated_resources.astype(ProcSet.from_str)
+        return cls(df, resource_bounds=resource_bounds)
+
     def gantt(self, time_scale=False, **kwargs):
         if time_scale:
             kwargs['xscale'] = 'time'
